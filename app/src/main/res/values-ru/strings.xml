@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">work timer</string>
+    <string name="time">время</string>
+    <string name="approximate_time">примерное время</string>
+    <string name="editLayoutTitle">создать набор</string>
+    <string name="work">работа</string>
+    <string name="rest">отдых</string>
+    <string name="timed">повторения</string>
+    <string name="name">имя</string>
+</resources>
