@@ -2,7 +2,9 @@ package com.ytowka.timer.Set;
 
 import android.content.Context;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -21,6 +23,7 @@ import java.util.ArrayList;
 public class SetAdapter extends RecyclerView.Adapter<SetAdapter.setViewHolder>{
     private ArrayList<Set> sets;
     MainActivity main;
+    public int contextCallItem;
 
     public SetAdapter(MainActivity main) {
         sets = new ArrayList<>();
@@ -63,11 +66,19 @@ public class SetAdapter extends RecyclerView.Adapter<SetAdapter.setViewHolder>{
             time = itemView.findViewById(R.id.timeLabel);
             fab = itemView.findViewById(R.id.goFab);
             fab.setOnClickListener(this);
+            main.registerForContextMenu(itemView);
         }
-        public void bind(Set set){
+        public void bind(final Set set){
             this.set = set;
             this.name.setText(set.getName());
             this.time.setText(MainActivity.res.getString(R.string.approximate_time)+": "+set.getTime());
+            this.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    contextCallItem = getAdapterPosition();
+                    return false;
+                }
+            });
         }
         public Set getSet(){
             return set;
@@ -85,5 +96,23 @@ public class SetAdapter extends RecyclerView.Adapter<SetAdapter.setViewHolder>{
     public void add(Set set){
         sets.add(set);
         notifyDataSetChanged();
+    }
+    public void put(int index, Set set){
+        sets.add(index,set);
+        //notifyDataSetChanged();
+    }
+    public void undo(){
+        sets.remove(0);
+    }
+    public void update(){
+        notifyDataSetChanged();
+    }
+    public void remove(int index){
+        sets.remove(index);
+        notifyItemRemoved(index);
+    }
+
+    public ArrayList<Set> getSets() {
+        return sets;
     }
 }

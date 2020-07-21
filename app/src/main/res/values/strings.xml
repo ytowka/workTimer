@@ -2,9 +2,12 @@
     <string name="app_name">work timer</string>
     <string name="time">time</string>
     <string name="approximate_time">approximate time</string>
-    <string name="editLayoutTitle">create set</string>
+    <string name="createLayoutTitle">create set</string>
     <string name="work">work</string>
     <string name="rest">rest</string>
     <string name="timed">repetitions</string>
     <string name="name">name</string>
+    <string name="delete">delete</string>
+    <string name="edit">edit</string>
+    <string name="editToolBarTitle">edit set</string>
 </resources>

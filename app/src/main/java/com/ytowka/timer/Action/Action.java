@@ -2,9 +2,10 @@ package com.ytowka.timer.Action;
 
 import com.ytowka.timer.Action.ActionType.ActionType;
 
+import java.io.Serializable;
 import java.util.concurrent.TimeUnit;
 
-public class Action {
+public class Action implements Serializable {
     private int timeSeconds;
     private boolean timed;
     private ActionType actionType;
@@ -36,7 +37,6 @@ public class Action {
     public String getTime(){
         int minutes =       (int) TimeUnit.SECONDS.toMinutes(timeSeconds);
         timeSeconds = timeSeconds - (int)TimeUnit.MINUTES.toSeconds(minutes);
-
 
         if(minutes == 0){
             return String.valueOf(timeSeconds);

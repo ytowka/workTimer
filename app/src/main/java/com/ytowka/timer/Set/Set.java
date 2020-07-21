@@ -2,10 +2,11 @@ package com.ytowka.timer.Set;
 
 import com.ytowka.timer.Action.Action;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
-public class Set {
+public class Set implements Serializable {
     private ArrayList<Action> actions;
     private int launches;
     private String name;
@@ -14,7 +15,17 @@ public class Set {
         actions = new ArrayList<>();
         this.name = name;
     }
-
+    public Set(){
+        actions = new ArrayList<>();
+        this.name = "";
+    }
+    public void setName(String name) {
+        this.name = name;
+    }
+    public void bind(ArrayList<Action> actions,String name){
+        this.actions = actions;
+        this.name = name;
+    }
     public Set(ArrayList<Action> actions, String name) {
         this.actions = actions;
         this.name = name;

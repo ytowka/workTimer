@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.ytowka.timer.Action.touchHelper.ItemTouchHelperAdapter;
 import com.ytowka.timer.MainActivity;
 import com.ytowka.timer.R;
+import com.ytowka.timer.Set.Set;
 
 import java.util.ArrayList;
 
@@ -31,11 +32,10 @@ public class ActionAdapter extends RecyclerView.Adapter<ActionAdapter.ActionView
         this.main = main;
         actions = new ArrayList<>();
     }
-    public ActionAdapter(ArrayList<Action> actions,Activity main){
+    public ActionAdapter(ArrayList<Action> actions, Activity main){
         this.actions = actions;
         this.main = main;
     }
-
     @NonNull
     @Override
     public ActionViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -97,7 +97,7 @@ public class ActionAdapter extends RecyclerView.Adapter<ActionAdapter.ActionView
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(main,"edit "+label.getText(),Toast.LENGTH_SHORT).show();
+
                 }
             });
         }
@@ -112,38 +112,32 @@ public class ActionAdapter extends RecyclerView.Adapter<ActionAdapter.ActionView
         public Action getAction(){
             return action;
         }
-
         @Override
         public boolean onTouch(View v, MotionEvent event) {
 
             return false;
         }
-
         @Override
         public boolean onDown(MotionEvent e) {
             return false;
         }
-
         @Override
         public void onShowPress(MotionEvent e) {
 
         }
-
         @Override
         public boolean onSingleTapUp(MotionEvent e) {
+
             return false;
         }
-
         @Override
         public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
             return false;
         }
-
         @Override
         public void onLongPress(MotionEvent e) {
             touchHelper.startDrag(this);
         }
-
         @Override
         public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
             return false;

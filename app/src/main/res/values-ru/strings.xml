@@ -3,9 +3,12 @@
     <string name="app_name">work timer</string>
     <string name="time">время</string>
     <string name="approximate_time">примерное время</string>
-    <string name="editLayoutTitle">создать набор</string>
+    <string name="createLayoutTitle">создать последовательность</string>
     <string name="work">работа</string>
     <string name="rest">отдых</string>
     <string name="timed">повторения</string>
     <string name="name">имя</string>
+    <string name="delete">удалить</string>
+    <string name="edit">изменить</string>
+    <string name="editToolBarTitle">изменить последовательность</string>
 </resources>
