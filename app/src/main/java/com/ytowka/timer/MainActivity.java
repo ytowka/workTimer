@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -46,6 +47,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         setList.setLayoutManager(layoutManager);
         adapter = new SetAdapter(this);
+        adapter.getTouchHelper().attachToRecyclerView(setList);
         setList.setAdapter(adapter);
 
         adapter.add(new Set("test"));
@@ -118,4 +120,5 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public SetAdapter getAdapter() {
         return adapter;
     }
+
 }

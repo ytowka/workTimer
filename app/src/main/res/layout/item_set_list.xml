@@ -12,12 +12,12 @@
     <TextView
         android:id="@+id/nameLabel"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="30dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="16dp"
         android:text="hello"
         android:textSize="30dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/imageView"
+        app:layout_constraintStart_toEndOf="@+id/dragButton"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.306" />
 
@@ -33,9 +33,15 @@
 
     <Button
         android:id="@+id/dragButton"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_marginStart="30dp"
+        android:layout_width="50dp"
+        android:layout_height="20dp"
+        android:layout_marginStart="16dp"
+        android:background="@drawable/rounded_rectangle"
+        android:backgroundTint="@color/colorAccent"
+        android:ellipsize="marquee"
+        android:text=""
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="14dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

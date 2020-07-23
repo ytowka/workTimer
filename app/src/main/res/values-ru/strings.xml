@@ -11,4 +11,7 @@
     <string name="delete">удалить</string>
     <string name="edit">изменить</string>
     <string name="editToolBarTitle">изменить последовательность</string>
+    <string name="name_the_set">назовите последовательность</string>
+    <string name="create">создать</string>
+    <string name="collapse">свернуть все</string>
 </resources>

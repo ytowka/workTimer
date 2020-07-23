@@ -1,5 +1,6 @@
 package com.ytowka.timer.Set;
 
+import com.google.gson.annotations.SerializedName;
 import com.ytowka.timer.Action.Action;
 
 import java.io.Serializable;
@@ -7,8 +8,11 @@ import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 public class Set implements Serializable {
+    @SerializedName("actions")
     private ArrayList<Action> actions;
+    @SerializedName("launches")
     private int launches;
+    @SerializedName("name")
     private String name;
 
     public Set(String name){

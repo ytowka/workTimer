@@ -2,11 +2,12 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:background="@drawable/rounded_dialog"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
 
     <Button
-        android:id="@+id/imageView2"
+        android:id="@+id/pickColorBtn"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_marginStart="16dp"
@@ -17,50 +18,51 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/editName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:width="250dp"
+        android:id="@+id/editActionName"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginStart="16dp"
         android:ems="10"
         android:hint="@string/name"
-        app:layout_constraintBottom_toBottomOf="@+id/imageView2"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/imageView2"
-        app:layout_constraintTop_toTopOf="@+id/imageView2" />
+        app:layout_constraintBottom_toBottomOf="@+id/pickColorBtn"
+        app:layout_constraintStart_toEndOf="@+id/pickColorBtn"
+        app:layout_constraintTop_toTopOf="@+id/pickColorBtn" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/actionTypes"
+        android:id="@+id/actionTypesList"
         android:layout_width="300dp"
         android:layout_height="50dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
         android:orientation="vertical"
-        app:layout_constraintEnd_toEndOf="@+id/editName"
-        app:layout_constraintStart_toStartOf="@+id/imageView2"
-        app:layout_constraintTop_toBottomOf="@+id/imageView2" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/pickColorBtn" />
 
     <EditText
-        android:id="@+id/time"
+        android:id="@+id/timeEditText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:ems="10"
-        android:inputType="time"
-        android:hint="@string/time"
         android:gravity="center"
-        app:layout_constraintEnd_toEndOf="@+id/actionTypes"
-        app:layout_constraintStart_toStartOf="@+id/actionTypes"
-        app:layout_constraintTop_toBottomOf="@+id/actionTypes" />
+        android:hint="@string/time"
+        android:inputType="time"
+        app:layout_constraintEnd_toEndOf="@+id/actionTypesList"
+        app:layout_constraintStart_toStartOf="@+id/actionTypesList"
+        app:layout_constraintTop_toBottomOf="@+id/actionTypesList" />
 
-    <Switch
+    <CheckBox
         android:id="@+id/timedSwitcher"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="16dp"
+        android:layout_margin="16dp"
+        android:button="@drawable/round_checkbox"
+        android:buttonTint="@color/design_default_color_on_secondary"
         android:text="@string/timed"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/time"
-        app:layout_constraintStart_toStartOf="@+id/time"
-        app:layout_constraintTop_toBottomOf="@+id/time" />
+        app:layout_constraintEnd_toEndOf="@+id/timeEditText"
+        app:layout_constraintStart_toStartOf="@+id/timeEditText"
+        app:layout_constraintTop_toBottomOf="@+id/timeEditText" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,20 +1,17 @@
 package com.ytowka.timer.Set;
 
 import android.content.Context;
-import android.util.Log;
-import android.view.ContextMenu;
 import android.view.LayoutInflater;
-import android.view.MenuInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.ytowka.timer.Action.Action;
 import com.ytowka.timer.MainActivity;
 import com.ytowka.timer.R;
 
@@ -28,6 +25,7 @@ public class SetAdapter extends RecyclerView.Adapter<SetAdapter.setViewHolder>{
     public SetAdapter(MainActivity main) {
         sets = new ArrayList<>();
         this.main = main;
+
     }
     public SetAdapter(ArrayList<Set> setList,MainActivity main){
         sets = setList;
@@ -37,7 +35,7 @@ public class SetAdapter extends RecyclerView.Adapter<SetAdapter.setViewHolder>{
     @Override
     public setViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         Context context = parent.getContext();
-        int layoutId = R.layout.set_list_element;
+        int layoutId = R.layout.item_set_list;
         LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(layoutId,parent,false);
         setViewHolder viewHolder = new setViewHolder(view);
@@ -54,23 +52,27 @@ public class SetAdapter extends RecyclerView.Adapter<SetAdapter.setViewHolder>{
         return sets.size();
     }
 
-    class setViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    class setViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener,View.OnTouchListener {
         private TextView name;
         private TextView time;
-        private FloatingActionButton fab;
+        Button drag;
+        //private FloatingActionButton fab;
         private Set set;
 
         public setViewHolder(@NonNull View itemView) {
             super(itemView);
             name = itemView.findViewById(R.id.nameLabel);
             time = itemView.findViewById(R.id.timeLabel);
-            fab = itemView.findViewById(R.id.goFab);
-            fab.setOnClickListener(this);
+            //fab = itemView.findViewById(R.id.goFab);
+            //fab.setOnClickListener(this);
+            drag = itemView.findViewById(R.id.dragButton);
+            drag.setOnTouchListener(this);
             main.registerForContextMenu(itemView);
         }
         public void bind(final Set set){
             this.set = set;
             this.name.setText(set.getName());
+            name.setHorizontalFadingEdgeEnabled(true);
             this.time.setText(MainActivity.res.getString(R.string.approximate_time)+": "+set.getTime());
             this.itemView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
@@ -87,10 +89,16 @@ public class SetAdapter extends RecyclerView.Adapter<SetAdapter.setViewHolder>{
         @Override
         public void onClick(View v) {
             switch (v.getId()){
-                case R.id.goFab:
-                    main.launchSet(set);
-                    break;
+                //case R.id.goFab:
+                //    main.launchSet(set);
+                //    break;
             }
+        }
+
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+            touchHelper.startDrag(this);
+            return false;
         }
     }
     public void add(Set set){
@@ -111,8 +119,49 @@ public class SetAdapter extends RecyclerView.Adapter<SetAdapter.setViewHolder>{
         sets.remove(index);
         notifyItemRemoved(index);
     }
+    public void swapItems(int from, int to){
+        Set buffer = sets.get(from);
+        sets.remove(from);
+        sets.add(to,buffer);
+        notifyItemMoved(from,to);
+    }
 
     public ArrayList<Set> getSets() {
         return sets;
+    }
+    private ItemTouchHelper.Callback callback = new ItemTouchHelper.Callback() {
+        @Override
+        public void onMoved(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, int fromPos, @NonNull RecyclerView.ViewHolder target, int toPos, int x, int y) {
+            super.onMoved(recyclerView, viewHolder, fromPos, target, toPos, x, y);
+        }
+
+        @Override
+        public int getMovementFlags(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
+            int dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN;
+            return makeMovementFlags(dragFlags,0);
+        }
+
+        @Override
+        public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+            swapItems(viewHolder.getAdapterPosition(),target.getAdapterPosition());
+            return true;
+        }
+
+        @Override
+        public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+
+        }
+
+        @Override
+        public boolean isLongPressDragEnabled() {
+            return false;
+        }
+    };
+    private ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
+    public ItemTouchHelper.Callback getCallback(){
+        return callback;
+    }
+    public ItemTouchHelper getTouchHelper(){
+        return touchHelper;
     }
 }

@@ -10,4 +10,7 @@
     <string name="delete">delete</string>
     <string name="edit">edit</string>
     <string name="editToolBarTitle">edit set</string>
+    <string name="name_the_set">name the set</string>
+    <string name="create">create</string>
+    <string name="collapse">collapse all</string>
 </resources>
