@@ -129,6 +129,7 @@ public class SetAdapter extends RecyclerView.Adapter<SetAdapter.setViewHolder>{
     public ArrayList<Set> getSets() {
         return sets;
     }
+
     private ItemTouchHelper.Callback callback = new ItemTouchHelper.Callback() {
         @Override
         public void onMoved(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, int fromPos, @NonNull RecyclerView.ViewHolder target, int toPos, int x, int y) {

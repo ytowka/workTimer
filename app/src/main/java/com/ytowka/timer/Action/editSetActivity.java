@@ -2,12 +2,10 @@ package com.ytowka.timer.Action;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -15,8 +13,6 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.ytowka.timer.Action.ActionType.ActionTypeAdapter;
-import com.ytowka.timer.Action.touchHelper.actionItemTouchHelper;
 import com.ytowka.timer.MainActivity;
 import com.ytowka.timer.R;
 import com.ytowka.timer.Set.Set;
@@ -63,20 +59,17 @@ public class editSetActivity extends AppCompatActivity implements View.OnClickLi
             adapter = new ActionAdapter(newSet.getActions(),this);
         }catch (NullPointerException e){
             adapter = new ActionAdapter(this);
-            adapter.add(new Action(1, true, ActionTypeAdapter.readyActions.get(0)));
+            adapter.add(new Action(1, true, MainActivity.readyActions.get(0)));
         }
-        ItemTouchHelper.Callback callback = new actionItemTouchHelper(adapter);
-        ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
 
-        adapter.setTouchHelper(touchHelper);
-        touchHelper.attachToRecyclerView(actionList);
+        adapter.getTouchHelper().attachToRecyclerView(actionList);
         actionList.setAdapter(adapter);
     }
     @Override
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.fabActionListAdd:
-                adapter.add(new Action(10,false,ActionTypeAdapter.readyActions.get(1)));
+                adapter.add(new Action(10,false,MainActivity.readyActions.get(1)));
                 break;
             case R.id.fabActionListDone:
                 set.bind(newSet.getActions(),newSet.getName());

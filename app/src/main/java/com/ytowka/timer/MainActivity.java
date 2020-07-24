@@ -17,12 +17,16 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.ytowka.timer.Action.ActionType.ActionType;
 import com.ytowka.timer.Set.Set;
 import com.ytowka.timer.Action.editSetActivity;
 import com.ytowka.timer.Set.SetAdapter;
 
+import java.util.ArrayList;
+
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     public static Resources res;
+    public static ArrayList<ActionType> readyActions = new ArrayList<>();
 
     Toolbar toolbar;
     FloatingActionButton addFab;
@@ -47,6 +51,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         setList.setLayoutManager(layoutManager);
         adapter = new SetAdapter(this);
+
         adapter.getTouchHelper().attachToRecyclerView(setList);
         setList.setAdapter(adapter);
 
@@ -58,6 +63,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         adapter.add(new Set("test6"));
 
         res = getResources();
+
+        readyActions.add(new ActionType(res.getString(R.string.work),res.getColor(R.color.workColor)));
+        readyActions.add(new ActionType(res.getString(R.string.rest),res.getColor(R.color.restColor)));
     }
     public void launchSet(Set launchedSet){
         launchedSet.launch();

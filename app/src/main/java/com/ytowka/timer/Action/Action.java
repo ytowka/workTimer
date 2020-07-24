@@ -74,4 +74,7 @@ public class Action implements Serializable {
     public ActionType getActionType() {
         return actionType;
     }
+    public void setTimeSeconds(int time){
+        this.timeSeconds = time;
+    }
 }

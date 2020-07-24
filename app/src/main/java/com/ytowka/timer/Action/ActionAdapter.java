@@ -6,6 +6,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.print.PrinterId;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -26,54 +27,94 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.ytowka.timer.Action.ActionType.ActionType;
 import com.ytowka.timer.Action.ActionType.ActionTypeAdapter;
-import com.ytowka.timer.Action.touchHelper.ItemTouchHelperAdapter;
 import com.ytowka.timer.MainActivity;
 import com.ytowka.timer.R;
 
 import java.util.ArrayList;
 
-public class ActionAdapter extends RecyclerView.Adapter<ActionAdapter.ActionViewHolder> implements ItemTouchHelperAdapter {
+public class ActionAdapter extends RecyclerView.Adapter<ActionAdapter.ActionViewHolder>{
     ArrayList<Action> actions;
     editSetActivity main;
-    private ItemTouchHelper touchHelper;
     private ArrayList<ActionViewHolder> viewHolders;
+    private ArrayList<RecyclerView> actionTypesLists;
+    private ArrayList<ActionTypeAdapter> actionTypeAdapters;
+
     public boolean isAllCollapsed = true;
 
-    private RecyclerView actionTypesList;
-    private ActionTypeAdapter adapter;
-
+    public void generalInit(){
+        viewHolders = new ArrayList<>();
+        actionTypesLists = new ArrayList<>();
+        actionTypeAdapters = new ArrayList<>();
+    }
     public ActionAdapter(editSetActivity main){
         this.main = main;
         actions = new ArrayList<>();
-        viewHolders = new ArrayList<>();
-
+        generalInit();
     }
     public ActionAdapter(ArrayList<Action> actions, editSetActivity main){
         this.actions = actions;
         this.main = main;
-        viewHolders = new ArrayList<>();
+        generalInit();
     }
-    private int vhCount = 0;
     @NonNull
     @Override
     public ActionViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         Context context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(R.layout.item_action_list,parent,false);
-            actionTypesList = view.findViewById(R.id.actionTypesList);
-            RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(main, LinearLayoutManager.HORIZONTAL, false);
-            actionTypesList.setLayoutManager(layoutManager);
-            adapter = new ActionTypeAdapter();
-            actionTypesList.setAdapter(adapter);
+
+        RecyclerView actionTypesList = view.findViewById(R.id.actionTypesList);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(main, LinearLayoutManager.HORIZONTAL, false);
+        actionTypesList.setLayoutManager(layoutManager);
+        ActionTypeAdapter actionTypeAdapter = new ActionTypeAdapter(this,MainActivity.readyActions);
+        actionTypesList.setAdapter(actionTypeAdapter);
+
         ActionViewHolder viewHolder = new ActionViewHolder(view);
-        viewHolders.add(viewHolder);
         viewHolder.setRecycler(actionTypesList);
-        vhCount++;
+
+        viewHolders.add(viewHolder);
+        actionTypesLists.add(actionTypesList);
+        actionTypeAdapters.add(actionTypeAdapter);
+        actionTypeAdapter.setInnerVH(viewHolder);
         return viewHolder;
     }
     @Override
     public void onBindViewHolder(@NonNull ActionViewHolder holder, int position) {
         holder.bind(actions.get(position));
+    }
+    public ArrayList<Integer> getExpandedActionIndex(){
+        ArrayList<Integer> expandedActions = new ArrayList<>();
+        for(Action i : actions){
+            if(i.isExpanded()){
+                expandedActions.add(actions.indexOf(i));
+            }
+        }
+        return expandedActions;
+    }
+    public ArrayList<Integer> getExpandedViewHolders(){
+        ArrayList<Integer> expandedVH= new ArrayList<>();
+        for(ActionViewHolder i:viewHolders){
+            if(i.getAction().isExpanded()){
+                expandedVH.add(viewHolders.indexOf(i));
+            }
+        }
+        return expandedVH;
+    }
+    public void updateExpanded(){
+        for(int i : getExpandedActionIndex()){
+            notifyItemChanged(i);
+        }
+        updateExpandedVH();
+    }
+    public void updateExpandedVH(){
+        for(int i : getExpandedViewHolders()){
+            viewHolders.get(i).updateRV();
+        }
+    }
+    public void bindActionType(ActionType actionType, ActionTypeAdapter adapter){
+        int index = actionTypeAdapters.indexOf(adapter);
+        viewHolders.get(index).bindActionTypeFields(actionType);
+        Log.i("debug","try bind " + index);
     }
     @Override
     public int getItemCount() {
@@ -89,7 +130,7 @@ public class ActionAdapter extends RecyclerView.Adapter<ActionAdapter.ActionView
         notifyItemRemoved(indedx);
         updateIndexes();
     }
-    @Override
+
     public void onItemMove(int fromPos, int toPos) {
         notifyItemMoved(fromPos,toPos);
         Action buffer = actions.get(fromPos);
@@ -98,7 +139,6 @@ public class ActionAdapter extends RecyclerView.Adapter<ActionAdapter.ActionView
         updateIndexes();
 
     }
-    @Override
     public void onItemSwiped(int pos) {
         remove(pos);
     }
@@ -120,7 +160,7 @@ public class ActionAdapter extends RecyclerView.Adapter<ActionAdapter.ActionView
         main.updateCollapseIcon(isAllCollapsed);
         //notifyDataSetChanged();
     }
-    class ActionViewHolder extends RecyclerView.ViewHolder {
+    public class ActionViewHolder extends RecyclerView.ViewHolder {
         private Action action;
 
         private TextView label;
@@ -131,10 +171,13 @@ public class ActionAdapter extends RecyclerView.Adapter<ActionAdapter.ActionView
         private CardView expandable_layout;
         private ConstraintLayout main_layout;
 
+        private boolean deletable = true;
+
         private EditText editLabel;
         private EditText editTime;
         private Button iconPick;
         private CheckBox reps;
+        private Button addAT;
 
         private RecyclerView actioTypesList;
         private ActionTypeAdapter adapter;
@@ -152,8 +195,13 @@ public class ActionAdapter extends RecyclerView.Adapter<ActionAdapter.ActionView
             editTime = itemView.findViewById(R.id.timeEditText);
             iconPick = itemView.findViewById(R.id.pickColorBtn);
             reps = itemView.findViewById(R.id.timedSwitcher);
-
-
+            addAT = itemView.findViewById(R.id.add_actionType_btn); addAT.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    bindAction();
+                    adapter.add(new ActionType(action.getName(),action.getColor()));
+                }
+            });
             expandable_layout = itemView.findViewById(R.id.expandable_layout);
             main_layout = itemView.findViewById(R.id.item_main_Layout);
 
@@ -187,6 +235,7 @@ public class ActionAdapter extends RecyclerView.Adapter<ActionAdapter.ActionView
             expandable_layout.setVisibility(action.isExpanded() ? View.VISIBLE : View.GONE);
 
             if(action.isExpanded()){
+                deletable = false;
                 editLabel.setText(action.getName());
                 editTime.setText(action.getTime());
                 reps.setChecked(action.isReps());
@@ -196,7 +245,7 @@ public class ActionAdapter extends RecyclerView.Adapter<ActionAdapter.ActionView
                 iconPick.setBackground(drawable);
 
             }else {
-
+                deletable = true;
                 label.setText(action.getName());
                 time.setText(action.getTime());
                 repsIcon.setImageDrawable(action.isReps() ? main.getDrawable(R.drawable.ic_replay_black_24dp) : main.getDrawable(R.drawable.ic_timer_black_24dp));
@@ -206,14 +255,67 @@ public class ActionAdapter extends RecyclerView.Adapter<ActionAdapter.ActionView
                 icon.setBackground(drawable);
             }
         }
+        public void bindActionTypeFields(ActionType actionType){
+            //editLabel.setText(actionType.getName());
+
+            //Drawable drawable = main.getDrawable(R.drawable.oval);
+            //drawable.setTint(actionType.getColor());
+            //iconPick.setBackground(drawable);
+
+            action.getActionType().bind(actionType);
+
+            notifyItemChanged(getIndex());
+            Log.i("debug","try bind ");
+
+        }
+        public int getIndex(){
+            return actions.indexOf(action);
+        }
+        public boolean isDeletable() {
+            return deletable;
+        }
+        public void collapse(){
+            bindAction();
+            action.collapse();
+        }
         public void updateIndex(){
-            index.setText(String.valueOf(actions.indexOf(action)+1));
+            index.setText(String.valueOf(getIndex()+1));
         }
         public Action getAction(){
             return action;
         }
         public void setRecycler(RecyclerView rv){
             actioTypesList = rv;
+            adapter = (ActionTypeAdapter) rv.getAdapter();
         }
+        public void updateRV(){
+            adapter.notifyDataSetChanged();
+        }
+    }
+    private ItemTouchHelper.Callback callback = new ItemTouchHelper.Callback() {
+        @Override
+        public int getMovementFlags(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
+            int dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN;
+            int swipeFlags = ItemTouchHelper.START | ItemTouchHelper.END;
+            return makeMovementFlags(dragFlags, 0);
+        }
+
+        @Override
+        public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+            onItemMove(viewHolder.getAdapterPosition(),target.getAdapterPosition());
+            return true;
+        }
+
+        @Override
+        public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+            remove(viewHolder.getAdapterPosition());
+        }
+    };
+    private ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
+    public ItemTouchHelper.Callback getCallback() {
+        return callback;
+    }
+    public ItemTouchHelper getTouchHelper() {
+        return touchHelper;
     }
 }
