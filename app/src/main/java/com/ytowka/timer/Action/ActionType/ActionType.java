@@ -30,4 +30,10 @@ public class ActionType implements Serializable {
         name = at.getName();
         color = at.getColor();
     }
+    public void setName(String name) {
+        this.name = name;
+    }
+    public void setColor(int color) {
+        this.color = color;
+    }
 }

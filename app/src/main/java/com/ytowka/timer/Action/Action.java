@@ -10,8 +10,8 @@ public class Action implements Serializable {
 
     @SerializedName("timeSeconds")
     private int timeSeconds;
-    @SerializedName("timed")
-    private boolean timed;
+    @SerializedName("reps")
+    private boolean reps;
     @SerializedName("actionType")
     private ActionType actionType;
 
@@ -22,20 +22,23 @@ public class Action implements Serializable {
     public void setExpanded(boolean expanded) {
         this.expanded = expanded;
     }
+    public void collapse(){
+        expanded = false;
+    }
 
     public Action(int timeSeconds, String name, boolean timed, int color){
         this.timeSeconds = timeSeconds;
-        this.timed = timed;
+        this.reps = timed;
         actionType = new ActionType(name, color);
     }
     public Action(int timeSeconds, boolean timed, ActionType actionType) {
         this.timeSeconds = timeSeconds;
-        this.timed = timed;
+        this.reps = timed;
         this.actionType = new ActionType(actionType.getName(),actionType.getColor());
     }
     public void bind(Action a){
         timeSeconds = a.getTimeSeconds();
-        timed = a.isTimed();
+        reps = a.isReps();
         actionType.bind(a.getActionType());
     }
     public int getTimeSeconds() {
@@ -44,8 +47,12 @@ public class Action implements Serializable {
     public String getName() {
         return actionType.getName();
     }
-    public boolean isTimed() {
-        return timed;
+    public boolean isReps() {
+        return reps;
+    }
+
+    public void setReps(boolean reps) {
+        this.reps = reps;
     }
     public int getColor(){
         return actionType.getColor();

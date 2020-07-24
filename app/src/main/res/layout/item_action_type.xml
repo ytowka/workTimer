@@ -4,16 +4,19 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_margin="8dp">
+    android:layout_height="wrap_content">
 
     <Button
         android:id="@+id/action_type_icon"
         android:layout_width="wrap_content"
         android:layout_height="34dp"
-        android:text="Button"
         android:layout_margin="8dp"
         android:background="@drawable/rounded_rectangle"
+        android:minWidth="34dp"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+        android:text="Button"
+        android:textColor="?android:attr/colorPrimaryDark"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

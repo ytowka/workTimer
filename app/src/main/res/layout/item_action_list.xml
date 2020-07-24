@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:focusable="true"
+    android:layout_height="wrap_content"
     android:clickable="true"
-    android:foreground="?android:attr/selectableItemBackground"
-    android:layout_height="wrap_content">
+    android:focusable="true"
+    android:foreground="?android:attr/selectableItemBackground">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/item_main_Layout"
@@ -62,6 +61,17 @@
             app:layout_constraintStart_toStartOf="@+id/icon"
             app:layout_constraintTop_toTopOf="@+id/icon" />
 
+        <ImageView
+            android:id="@+id/reps_icon"
+            android:layout_width="16dp"
+            android:layout_height="22dp"
+            android:layout_marginStart="8dp"
+            app:layout_constraintBottom_toBottomOf="@+id/label"
+            app:layout_constraintStart_toEndOf="@+id/label"
+            app:layout_constraintTop_toTopOf="@+id/label"
+            app:layout_constraintVertical_bias="0.71000004"
+            app:srcCompat="@drawable/ic_timer_black_24dp" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.cardview.widget.CardView
@@ -84,40 +94,52 @@
                 android:layout_height="50dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
-                android:background="@drawable/rounded_rectangle"
-                android:backgroundTint="@color/colorAccent"
+                android:background="@drawable/color_pick_buton"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <EditText
                 android:id="@+id/editActionName"
-                android:layout_width="wrap_content"
-                android:layout_height="40dp"
-                android:layout_marginStart="16dp"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginStart="68dp"
+                android:layout_marginEnd="8dp"
+                android:background="@drawable/outlined_rect"
                 android:ems="10"
                 android:hint="@string/name"
+                android:inputType="text"
+                android:maxLines="1"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
                 app:layout_constraintBottom_toBottomOf="@+id/pickColorBtn"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/pickColorBtn"
                 app:layout_constraintTop_toTopOf="@+id/pickColorBtn" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/actionTypesList"
-                android:layout_width="300dp"
+                android:layout_width="match_parent"
                 android:layout_height="50dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
                 android:orientation="vertical"
-                app:layout_constraintStart_toStartOf="@+id/pickColorBtn"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/pickColorBtn" />
 
             <EditText
                 android:id="@+id/timeEditText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_width="200dp"
+                android:layout_height="50dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/outlined_rect"
                 android:ems="10"
                 android:gravity="center"
                 android:hint="@string/time"
                 android:inputType="time"
-                app:layout_constraintEnd_toEndOf="@+id/actionTypesList"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
                 app:layout_constraintStart_toStartOf="@+id/actionTypesList"
                 app:layout_constraintTop_toBottomOf="@+id/actionTypesList" />
 
@@ -125,14 +147,12 @@
                 android:id="@+id/timedSwitcher"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="16dp"
+                android:layout_marginStart="8dp"
                 android:button="@drawable/round_checkbox"
-                android:buttonTint="@color/design_default_color_on_secondary"
-                android:text="@string/timed"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="@+id/timeEditText"
-                app:layout_constraintStart_toStartOf="@+id/timeEditText"
-                app:layout_constraintTop_toBottomOf="@+id/timeEditText" />
+                android:buttonTint="@color/colorPrimary"
+                app:layout_constraintBottom_toBottomOf="@+id/timeEditText"
+                app:layout_constraintStart_toEndOf="@+id/timeEditText"
+                app:layout_constraintTop_toTopOf="@+id/timeEditText" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>

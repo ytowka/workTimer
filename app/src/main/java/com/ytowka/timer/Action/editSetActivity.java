@@ -76,7 +76,7 @@ public class editSetActivity extends AppCompatActivity implements View.OnClickLi
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.fabActionListAdd:
-                adapter.add(new Action(10,false,ActionTypeAdapter.readyActions.get(0)));
+                adapter.add(new Action(10,false,ActionTypeAdapter.readyActions.get(1)));
                 break;
             case R.id.fabActionListDone:
                 set.bind(newSet.getActions(),newSet.getName());
