@@ -39,24 +39,36 @@ public class ActionAdapter extends RecyclerView.Adapter<ActionAdapter.ActionView
     private ArrayList<ActionViewHolder> viewHolders;
     public boolean isAllCollapsed = true;
 
+    private RecyclerView actionTypesList;
+    private ActionTypeAdapter adapter;
+
     public ActionAdapter(editSetActivity main){
         this.main = main;
         actions = new ArrayList<>();
         viewHolders = new ArrayList<>();
+
     }
     public ActionAdapter(ArrayList<Action> actions, editSetActivity main){
         this.actions = actions;
         this.main = main;
         viewHolders = new ArrayList<>();
     }
+    private int vhCount = 0;
     @NonNull
     @Override
     public ActionViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         Context context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(R.layout.item_action_list,parent,false);
+            actionTypesList = view.findViewById(R.id.actionTypesList);
+            RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(main, LinearLayoutManager.HORIZONTAL, false);
+            actionTypesList.setLayoutManager(layoutManager);
+            adapter = new ActionTypeAdapter();
+            actionTypesList.setAdapter(adapter);
         ActionViewHolder viewHolder = new ActionViewHolder(view);
         viewHolders.add(viewHolder);
+        viewHolder.setRecycler(actionTypesList);
+        vhCount++;
         return viewHolder;
     }
     @Override
@@ -141,11 +153,6 @@ public class ActionAdapter extends RecyclerView.Adapter<ActionAdapter.ActionView
             iconPick = itemView.findViewById(R.id.pickColorBtn);
             reps = itemView.findViewById(R.id.timedSwitcher);
 
-            actioTypesList = itemView.findViewById(R.id.actionTypesList);
-            RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(main, LinearLayoutManager.HORIZONTAL, false);
-            actioTypesList.setLayoutManager(layoutManager);
-            adapter = new ActionTypeAdapter();
-            actioTypesList.setAdapter(adapter);
 
             expandable_layout = itemView.findViewById(R.id.expandable_layout);
             main_layout = itemView.findViewById(R.id.item_main_Layout);
@@ -204,6 +211,9 @@ public class ActionAdapter extends RecyclerView.Adapter<ActionAdapter.ActionView
         }
         public Action getAction(){
             return action;
+        }
+        public void setRecycler(RecyclerView rv){
+            actioTypesList = rv;
         }
     }
 }

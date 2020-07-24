@@ -42,6 +42,9 @@ public class ActionTypeAdapter extends RecyclerView.Adapter<ActionTypeAdapter.Ac
         readyActions.remove(index);
         notifyItemRemoved(index);
     }
+    public void add(){
+
+    }
     @Override
     public void onBindViewHolder(@NonNull ActionTypeViewHolder holder, int position) {
         if(position == readyActions.size()-1){
@@ -78,6 +81,7 @@ public class ActionTypeAdapter extends RecyclerView.Adapter<ActionTypeAdapter.Ac
                 dr.setTint(actionType.getColor());
                 icon.setBackground(dr);
             }
+            icon.setOnLongClickListener(this);
         }
         public void setDeletable(boolean deletable){
             this.deletable = deletable;
