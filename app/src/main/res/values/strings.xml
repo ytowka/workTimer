@@ -13,4 +13,11 @@
     <string name="name_the_set">name the set</string>
     <string name="create">create</string>
     <string name="collapse">collapse all</string>
+    <string name="apply">apply</string>
+    <string name="newSet">New set</string>
+    <string name="symbols">symbols</string>
+    <string name="emptySetListMassage">create a new set by clicking the button in the bottom right corner</string>
+    <string name="emptyActionListMassage">create a new action by clicking the \"+\" button in the bottom right corner</string>
+    <string name="min1char">at least 1 symbol</string>
+    <string name="prepare">prepare</string>
 </resources>

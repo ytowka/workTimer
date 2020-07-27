@@ -16,19 +16,26 @@ import com.ytowka.timer.MainActivity;
 import com.ytowka.timer.R;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class SetAdapter extends RecyclerView.Adapter<SetAdapter.setViewHolder>{
-    private ArrayList<Set> sets;
+    private List<Set> sets;
     MainActivity main;
     public int contextCallItem;
+    public TextView emptyMassage;
+    private boolean isEmpty = true; public boolean isEmpty() {
+        return isEmpty;
+    }
 
-    public SetAdapter(MainActivity main) {
+    public SetAdapter(MainActivity main, TextView epmtyMassage) {
         sets = new ArrayList<>();
+        this.emptyMassage = epmtyMassage;
         this.main = main;
 
     }
-    public SetAdapter(ArrayList<Set> setList,MainActivity main){
+    public SetAdapter(List<Set> setList, MainActivity main, TextView epmtyMassage){
         sets = setList;
+        this.emptyMassage = epmtyMassage;
         this.main = main;
     }
     @NonNull
@@ -49,7 +56,10 @@ public class SetAdapter extends RecyclerView.Adapter<SetAdapter.setViewHolder>{
 
     @Override
     public int getItemCount() {
-        return sets.size();
+        int count = sets.size();
+        isEmpty = count == 0;
+        emptyMassage.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
+        return count;
     }
 
     class setViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener,View.OnTouchListener {
@@ -126,7 +136,7 @@ public class SetAdapter extends RecyclerView.Adapter<SetAdapter.setViewHolder>{
         notifyItemMoved(from,to);
     }
 
-    public ArrayList<Set> getSets() {
+    public List<Set> getSets() {
         return sets;
     }
 

@@ -1,15 +1,11 @@
 package com.ytowka.timer.Action;
 
-import android.app.Activity;
 import android.content.Context;
-import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.GradientDrawable;
-import android.print.PrinterId;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
-import android.view.GestureDetector;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -32,28 +28,37 @@ import com.ytowka.timer.R;
 
 import java.util.ArrayList;
 
+import yuku.ambilwarna.AmbilWarnaDialog;
+
 public class ActionAdapter extends RecyclerView.Adapter<ActionAdapter.ActionViewHolder>{
     ArrayList<Action> actions;
-    editSetActivity main;
+    EditSetActivity main;
     private ArrayList<ActionViewHolder> viewHolders;
     private ArrayList<RecyclerView> actionTypesLists;
     private ArrayList<ActionTypeAdapter> actionTypeAdapters;
+    public TextView emptyMassage;
+    private boolean isEmpty = true; public boolean isEmpty() {
+        return isEmpty;
+    }
 
     public boolean isAllCollapsed = true;
+    public int expanded = 0;
 
-    public void generalInit(){
+    private void generalInit(){
         viewHolders = new ArrayList<>();
         actionTypesLists = new ArrayList<>();
         actionTypeAdapters = new ArrayList<>();
     }
-    public ActionAdapter(editSetActivity main){
+    public ActionAdapter(EditSetActivity main, TextView emptyMassage){
         this.main = main;
         actions = new ArrayList<>();
+        this.emptyMassage = emptyMassage;
         generalInit();
     }
-    public ActionAdapter(ArrayList<Action> actions, editSetActivity main){
+    public ActionAdapter(ArrayList<Action> actions, EditSetActivity main, TextView emptyMassage){
         this.actions = actions;
         this.main = main;
+        this.emptyMassage = emptyMassage;
         generalInit();
     }
     @NonNull
@@ -111,14 +116,12 @@ public class ActionAdapter extends RecyclerView.Adapter<ActionAdapter.ActionView
             viewHolders.get(i).updateRV();
         }
     }
-    public void bindActionType(ActionType actionType, ActionTypeAdapter adapter){
-        int index = actionTypeAdapters.indexOf(adapter);
-        viewHolders.get(index).bindActionTypeFields(actionType);
-        Log.i("debug","try bind " + index);
-    }
     @Override
     public int getItemCount() {
-        return actions.size();
+        int count = actions.size();
+        isEmpty = count == 0;
+        emptyMassage.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
+        return count;
     }
     public void add(Action action){
         actions.add(action);
@@ -130,7 +133,6 @@ public class ActionAdapter extends RecyclerView.Adapter<ActionAdapter.ActionView
         notifyItemRemoved(indedx);
         updateIndexes();
     }
-
     public void onItemMove(int fromPos, int toPos) {
         notifyItemMoved(fromPos,toPos);
         Action buffer = actions.get(fromPos);
@@ -142,25 +144,22 @@ public class ActionAdapter extends RecyclerView.Adapter<ActionAdapter.ActionView
     public void onItemSwiped(int pos) {
         remove(pos);
     }
-    void setTouchHelper(ItemTouchHelper touchHelper){
-        this.touchHelper = touchHelper;
-    }
-
     public void updateIndexes(){
         for(ActionViewHolder i: viewHolders){
             i.updateIndex();
         }
     }
+
     public void collapseAll(){
         for(Action i:actions){
             i.setExpanded(false);
             notifyItemChanged(actions.indexOf(i));
         }
+        expanded = 0;
         isAllCollapsed = true;
         main.updateCollapseIcon(isAllCollapsed);
-        //notifyDataSetChanged();
     }
-    public class ActionViewHolder extends RecyclerView.ViewHolder {
+    public class ActionViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private Action action;
 
         private TextView label;
@@ -177,7 +176,9 @@ public class ActionAdapter extends RecyclerView.Adapter<ActionAdapter.ActionView
         private EditText editTime;
         private Button iconPick;
         private CheckBox reps;
+
         private Button addAT;
+        private Button apply;
 
         private RecyclerView actioTypesList;
         private ActionTypeAdapter adapter;
@@ -191,17 +192,43 @@ public class ActionAdapter extends RecyclerView.Adapter<ActionAdapter.ActionView
             repsIcon = itemView.findViewById(R.id.reps_icon);
 
             //itemView.findViewById()
-            editLabel = itemView.findViewById(R.id.editActionName);
-            editTime = itemView.findViewById(R.id.timeEditText);
-            iconPick = itemView.findViewById(R.id.pickColorBtn);
-            reps = itemView.findViewById(R.id.timedSwitcher);
-            addAT = itemView.findViewById(R.id.add_actionType_btn); addAT.setOnClickListener(new View.OnClickListener() {
+            editLabel = itemView.findViewById(R.id.editActionName);editLabel.addTextChangedListener(new TextWatcher() {
                 @Override
-                public void onClick(View v) {
-                    bindAction();
-                    adapter.add(new ActionType(action.getName(),action.getColor()));
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+                    action.getActionType().setName(s.toString());
                 }
             });
+            editTime = itemView.findViewById(R.id.timeEditText); editTime.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+                    action.setTimeSeconds(getTimeSeconds(s.toString()));
+                }
+            });
+            iconPick = itemView.findViewById(R.id.pickColorBtn); iconPick.setOnClickListener(this);
+            reps = itemView.findViewById(R.id.timedSwitcher); reps.setOnClickListener(this);
+            apply = itemView.findViewById(R.id.apply_edit_action_btn); apply.setOnClickListener(this);
+            addAT = itemView.findViewById(R.id.add_actionType_btn); addAT.setOnClickListener(this);
+
             expandable_layout = itemView.findViewById(R.id.expandable_layout);
             main_layout = itemView.findViewById(R.id.item_main_Layout);
 
@@ -212,18 +239,74 @@ public class ActionAdapter extends RecyclerView.Adapter<ActionAdapter.ActionView
                 }
             });
         }
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()){
+                case R.id.timedSwitcher:
+                    action.setReps(reps.isChecked());
+                    break;
+                case R.id.apply_edit_action_btn:
+                    itemClick();
+                    break;
+                case R.id.add_actionType_btn:
+                    bindAction();
+                    adapter.add(new ActionType(action.getName(),action.getColor()));
+                    break;
+                case R.id.pickColorBtn:
+                    AmbilWarnaDialog dialog = new AmbilWarnaDialog(main, action.getColor(), false, new AmbilWarnaDialog.OnAmbilWarnaListener() {
+                        @Override
+                        public void onCancel(AmbilWarnaDialog dialog) {
+
+                        }
+                        @Override
+                        public void onOk(AmbilWarnaDialog dialog, int color) {
+                            Drawable a = iconPick.getBackground();
+                            a.setTint(color);
+                            iconPick.setBackground(a);
+                            action.getActionType().setColor(color);
+                        }
+                    });
+                    dialog.show();
+                    break;
+            }
+        }
         private void bindAction(){
             action.getActionType().setName(editLabel.getText().toString());
             //action.getActionType().setColor(color);
+            action.setTimeSeconds(getTimeSeconds(editTime.getText().toString()));
             action.setReps(reps.isChecked());
+        }
+        public int getTimeSeconds(String text){
+            if(text.length()>=1){
+                String[] time = text.split(":");
+                int timeSeconds = 0;
+                if(time.length == 1){
+                    timeSeconds += Integer.parseInt(time[0]);
+                }else if(time.length == 2){
+                    timeSeconds += Integer.parseInt(time[1]);
+                    timeSeconds += Integer.parseInt(time[0])*60;
+                }else if(time.length != 0){
+                    timeSeconds += Integer.parseInt(time[time.length-1]);
+                    timeSeconds += Integer.parseInt(time[time.length-2])*60;
+                }else{
+                    timeSeconds = 5;
+                }
+                return timeSeconds;
+            }
+            return 5;
         }
         public void itemClick(){
             action.setExpanded(!action.isExpanded());
             if(action.isExpanded()){
                 isAllCollapsed = false;
                 main.updateCollapseIcon(isAllCollapsed);
+                expanded++;
             }else{
-                bindAction();
+                expanded--;
+                if(expanded == 0){
+                    isAllCollapsed = true;
+                    main.updateCollapseIcon(true);
+                }
             }
             notifyItemChanged(getAdapterPosition());
         }
@@ -247,6 +330,7 @@ public class ActionAdapter extends RecyclerView.Adapter<ActionAdapter.ActionView
             }else {
                 deletable = true;
                 label.setText(action.getName());
+                Log.i("debug",action.getTime()+" getTimeSbind");
                 time.setText(action.getTime());
                 repsIcon.setImageDrawable(action.isReps() ? main.getDrawable(R.drawable.ic_replay_black_24dp) : main.getDrawable(R.drawable.ic_timer_black_24dp));
 
@@ -257,26 +341,14 @@ public class ActionAdapter extends RecyclerView.Adapter<ActionAdapter.ActionView
         }
         public void bindActionTypeFields(ActionType actionType){
             //editLabel.setText(actionType.getName());
-
-            //Drawable drawable = main.getDrawable(R.drawable.oval);
-            //drawable.setTint(actionType.getColor());
-            //iconPick.setBackground(drawable);
-
             action.getActionType().bind(actionType);
-
             notifyItemChanged(getIndex());
-            Log.i("debug","try bind ");
-
         }
         public int getIndex(){
             return actions.indexOf(action);
         }
         public boolean isDeletable() {
             return deletable;
-        }
-        public void collapse(){
-            bindAction();
-            action.collapse();
         }
         public void updateIndex(){
             index.setText(String.valueOf(getIndex()+1));
@@ -291,6 +363,19 @@ public class ActionAdapter extends RecyclerView.Adapter<ActionAdapter.ActionView
         public void updateRV(){
             adapter.notifyDataSetChanged();
         }
+
+
+        /*@Override
+        public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+            switch(actionId){
+                case 0:
+                    action.getActionType().setName(v.getText().toString());
+                    break;
+                case 1:
+                    action.setTimeSeconds(getTimeSeconds(v.getText().toString()));
+            }
+            return false;
+        }*/
     }
     private ItemTouchHelper.Callback callback = new ItemTouchHelper.Callback() {
         @Override

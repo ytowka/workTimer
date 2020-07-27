@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -17,7 +18,7 @@ import com.ytowka.timer.MainActivity;
 import com.ytowka.timer.R;
 import com.ytowka.timer.Set.Set;
 
-public class editSetActivity extends AppCompatActivity implements View.OnClickListener {
+public class EditSetActivity extends AppCompatActivity implements View.OnClickListener {
     Toolbar toolbar;
     FloatingActionButton done;
     FloatingActionButton add;
@@ -41,12 +42,8 @@ public class editSetActivity extends AppCompatActivity implements View.OnClickLi
         setSupportActionBar(toolbar);
         getSupportActionBar().setSubtitle(R.string.createLayoutTitle);
 
+
         int requestCode = getIntent().getExtras().getInt("requestCode");
-        if(requestCode == MainActivity.ADD_SET){
-            getSupportActionBar().setSubtitle(R.string.createLayoutTitle);
-        }else if(requestCode == MainActivity.EDIT_SET){
-            getSupportActionBar().setSubtitle(R.string.editToolBarTitle);
-        }
 
         actionList = findViewById(R.id.editSetRV);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
@@ -56,10 +53,17 @@ public class editSetActivity extends AppCompatActivity implements View.OnClickLi
             int id = getIntent().getExtras().getInt(MainActivity.SETID);
             set = MainActivity.adapter.getSets().get(id);
             newSet = new Set(set.getActions(),set.getName());
-            adapter = new ActionAdapter(newSet.getActions(),this);
+            adapter = new ActionAdapter(newSet.getActions(),this,(TextView)findViewById(R.id.empry_actions_massage));
         }catch (NullPointerException e){
-            adapter = new ActionAdapter(this);
+            adapter = new ActionAdapter(this,(TextView)findViewById(R.id.empry_actions_massage));
             adapter.add(new Action(1, true, MainActivity.readyActions.get(0)));
+        }
+        if(requestCode == MainActivity.ADD_SET){
+            getSupportActionBar().setTitle(R.string.newSet);
+            getSupportActionBar().setSubtitle(R.string.createLayoutTitle);
+        }else if(requestCode == MainActivity.EDIT_SET){
+            getSupportActionBar().setTitle(set.getName());
+            getSupportActionBar().setSubtitle(R.string.editToolBarTitle);
         }
 
         adapter.getTouchHelper().attachToRecyclerView(actionList);
@@ -69,16 +73,20 @@ public class editSetActivity extends AppCompatActivity implements View.OnClickLi
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.fabActionListAdd:
-                adapter.add(new Action(10,false,MainActivity.readyActions.get(1)));
+                adapter.add(new Action(10,false,MainActivity.readyActions.get(0)));
                 break;
             case R.id.fabActionListDone:
-                set.bind(newSet.getActions(),newSet.getName());
-                Intent response = new Intent();
-                set.setName("additionaldfgdsfgdsfdsfsdfg");
-                setResult(RESULT_OK,response);
-                finish();
+                NamingDialog dialog = new NamingDialog(newSet);
+                dialog.show(getSupportFragmentManager(),"naming dialog");
+
                 break;
         }
+    }
+    public void finishEditing(){
+        set.bind(newSet.getActions(),newSet.getName());
+        Intent response = new Intent();
+        setResult(RESULT_OK,response);
+        finish();
     }
     public void toast(String text){
         Toast.makeText(this,text,Toast.LENGTH_SHORT).show();

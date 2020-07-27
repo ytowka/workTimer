@@ -11,7 +11,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/item_main_Layout"
         android:layout_width="match_parent"
-        android:layout_height="70dp"
+        android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -21,7 +21,10 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_margin="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
             android:background="@drawable/oval"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -108,6 +111,8 @@
                 android:ems="10"
                 android:hint="@string/name"
                 android:inputType="text"
+                android:imeOptions="actionDone"
+                android:imeActionId="0"
                 android:maxLines="1"
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"
@@ -145,16 +150,20 @@
 
             <EditText
                 android:id="@+id/timeEditText"
-                android:layout_width="200dp"
+                android:layout_width="150dp"
                 android:layout_height="50dp"
                 android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
                 android:background="@drawable/outlined_rect"
                 android:ems="10"
                 android:gravity="center"
                 android:hint="@string/time"
+                android:imeActionId="1"
+                android:imeOptions="actionDone"
                 android:inputType="time"
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/actionTypesList"
                 app:layout_constraintTop_toBottomOf="@+id/actionTypesList" />
 
@@ -162,13 +171,35 @@
                 android:id="@+id/timedSwitcher"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
                 android:button="@drawable/round_checkbox"
                 android:buttonTint="@color/colorPrimary"
-                app:layout_constraintBottom_toBottomOf="@+id/timeEditText"
-                app:layout_constraintStart_toEndOf="@+id/timeEditText"
-                app:layout_constraintTop_toTopOf="@+id/timeEditText" />
+                app:layout_constraintBottom_toTopOf="@+id/textView"
+                app:layout_constraintStart_toStartOf="@+id/textView" />
+
+            <Button
+                android:id="@+id/apply_edit_action_btn"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                android:background="@drawable/rounded_rectangle"
+                android:backgroundTint="@color/colorPrimary"
+                android:text="ok"
+                android:textColor="@color/design_default_color_background"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginBottom="12dp"
+                android:text="@string/timed"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/timeEditText" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

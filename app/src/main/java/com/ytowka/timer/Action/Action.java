@@ -59,17 +59,21 @@ public class Action implements Serializable {
     }
     public String getTime(){
         int minutes =       (int) TimeUnit.SECONDS.toMinutes(timeSeconds);
-        timeSeconds = timeSeconds - (int)TimeUnit.MINUTES.toSeconds(minutes);
+        int Seconds = timeSeconds - (int)TimeUnit.MINUTES.toSeconds(minutes);
 
         if(minutes == 0){
             return String.valueOf(timeSeconds);
         }else{
             String minutesS = String.valueOf(minutes);
-            String secondsS = String.valueOf(timeSeconds);
+            String secondsS = String.valueOf(Seconds);
             if(minutes<10) minutesS = "0"+minutesS;
-            if(timeSeconds<10) secondsS = "0"+secondsS;
+            if(Seconds<10) secondsS = "0"+secondsS;
             return minutesS+":"+secondsS;
         }
+    }
+    public void getT(){
+        int minutes;
+
     }
     public ActionType getActionType() {
         return actionType;

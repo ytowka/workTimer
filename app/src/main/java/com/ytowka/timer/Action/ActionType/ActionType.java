@@ -1,12 +1,8 @@
 package com.ytowka.timer.Action.ActionType;
 
 import com.google.gson.annotations.SerializedName;
-import com.ytowka.timer.Action.Action;
-import com.ytowka.timer.MainActivity;
-import com.ytowka.timer.R;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 
 public class ActionType implements Serializable {
 

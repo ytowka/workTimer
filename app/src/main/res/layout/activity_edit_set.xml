@@ -5,13 +5,23 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".Action.editSetActivity">
+    tools:context=".Action.EditSetActivity">
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/editLayoutToolBar"
         style="@style/Toolbar"/>
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/empry_actions_massage"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:text="@string/emptyActionListMassage"
+            app:layout_constraintBottom_toBottomOf="@+id/editSetRV"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/editSetRV" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/editSetRV"

@@ -4,29 +4,35 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.preference.Preference;
 import android.view.ContextMenu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
+import android.widget.TextView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import com.ytowka.timer.Action.ActionType.ActionType;
 import com.ytowka.timer.Set.Set;
-import com.ytowka.timer.Action.editSetActivity;
+import com.ytowka.timer.Action.EditSetActivity;
 import com.ytowka.timer.Set.SetAdapter;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     public static Resources res;
-    public static ArrayList<ActionType> readyActions = new ArrayList<>();
+    public static ArrayList<ActionType> readyActions;
 
     Toolbar toolbar;
     FloatingActionButton addFab;
@@ -37,6 +43,30 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public static final String SETID = "com.ytowka.timer.SETID";
     public static final int EDIT_SET = 0;
     public static final int ADD_SET = 1;
+
+    public static final String APP_PREFERNCES = "work timer saves";
+    public static final String SET_PREFS = "work_timer_sets";
+    public static final String ACTION_TYPES_PREFS = "work_timer_action_types";
+    public static final String ADS_PREFS = "work_timer_ad_data";
+
+    private boolean isSetsLoaded;
+    private boolean isActionTypesLoaded;
+
+    private Gson gson;
+
+    private SharedPreferences preferences;
+
+    @Override
+    protected void onDestroy() {
+       save();
+        super.onDestroy();
+    }
+    public void save(){
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString(SET_PREFS,gson.toJson(adapter.getSets()));
+        editor.putString(ACTION_TYPES_PREFS,gson.toJson(readyActions));
+        editor.commit();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,22 +80,31 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setList = findViewById(R.id.setList);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         setList.setLayoutManager(layoutManager);
-        adapter = new SetAdapter(this);
 
+        GsonBuilder builder = new GsonBuilder();
+        gson = builder.create();
+
+        Type itemsListType = new TypeToken<List<Set>>() {}.getType();
+        preferences = getSharedPreferences(APP_PREFERNCES,MODE_PRIVATE);
+        if(preferences.contains(SET_PREFS)){
+            List<Set> sets = gson.fromJson(preferences.getString(SET_PREFS,""),itemsListType);
+            adapter = new SetAdapter(sets,this,(TextView) findViewById(R.id.empty_set_massage));
+        }else{
+            adapter = new SetAdapter(this,(TextView) findViewById(R.id.empty_set_massage));
+        }
         adapter.getTouchHelper().attachToRecyclerView(setList);
         setList.setAdapter(adapter);
 
-        adapter.add(new Set("test"));
-        adapter.add(new Set("test2"));
-        adapter.add(new Set("test3"));
-        adapter.add(new Set("test4"));
-        adapter.add(new Set("test5"));
-        adapter.add(new Set("test6"));
-
+        itemsListType = new TypeToken<List<ActionType>>() {}.getType();
         res = getResources();
-
-        readyActions.add(new ActionType(res.getString(R.string.work),res.getColor(R.color.workColor)));
-        readyActions.add(new ActionType(res.getString(R.string.rest),res.getColor(R.color.restColor)));
+        if(preferences.contains(ACTION_TYPES_PREFS)){
+            readyActions = gson.fromJson(preferences.getString(ACTION_TYPES_PREFS,""),itemsListType);
+        }else{
+            readyActions = new ArrayList<>();
+            readyActions.add(new ActionType(res.getString(R.string.work),res.getColor(R.color.workColor)));
+            readyActions.add(new ActionType(res.getString(R.string.rest),res.getColor(R.color.restColor)));
+            readyActions.add(new ActionType(res.getString(R.string.prepare),res.getColor(R.color.prepareColor)));
+        }
     }
     public void launchSet(Set launchedSet){
         launchedSet.launch();
@@ -90,6 +129,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }else{
                     adapter.notifyDataSetChanged();
                 }
+                save();
                 break;
             case ADD_SET:
                 if(resultCode == RESULT_CANCELED){
@@ -97,6 +137,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }else{
                     adapter.notifyDataSetChanged();
                 }
+                save();
                 break;
         }
     }
@@ -114,7 +155,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return super.onContextItemSelected(item);
     }
     public void editSet(int id,int point){
-        Intent intent = new Intent(MainActivity.this, editSetActivity.class);
+        Intent intent = new Intent(MainActivity.this, EditSetActivity.class);
         intent.putExtra(SETID,id);
         intent.putExtra("requestCode", point);
         startActivityForResult(intent,point);

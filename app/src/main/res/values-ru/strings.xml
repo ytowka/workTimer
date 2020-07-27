@@ -14,4 +14,11 @@
     <string name="name_the_set">назовите последовательность</string>
     <string name="create">создать</string>
     <string name="collapse">свернуть все</string>
+    <string name="apply">применить</string>
+    <string name="newSet">"новая последовательность "</string>
+    <string name="symbols">символы</string>
+    <string name="emptySetListMassage">создайте новую последовательность, нажав на кнопку в правом нижнем углу</string>
+    <string name="emptyActionListMassage">создайте новое действие, нажав на кнопку \"+\" в правом нижнем углу</string>
+    <string name="min1char">хотя бы один символ</string>
+    <string name="prepare">подготовка</string>
 </resources>

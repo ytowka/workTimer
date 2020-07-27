@@ -72,7 +72,7 @@ public class ActionTypeAdapter extends RecyclerView.Adapter<ActionTypeAdapter.Ac
     }
 
     class ActionTypeViewHolder extends RecyclerView.ViewHolder implements View.OnLongClickListener, View.OnClickListener {
-        public static final int UNDELETABLE = 2;
+        public static final int UNDELETABLE = 3;
 
         private Button icon;
         private ActionType actionType;
@@ -96,8 +96,7 @@ public class ActionTypeAdapter extends RecyclerView.Adapter<ActionTypeAdapter.Ac
             icon.setOnLongClickListener(this);
         }
         public boolean deletable(){
-            if(index <= UNDELETABLE-1) return false;
-            return true;
+            return index > UNDELETABLE - 1;
         }
 
         @Override
