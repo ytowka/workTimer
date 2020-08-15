@@ -3,10 +3,15 @@
     <color name="colorPrimary">#3BA5FF</color>
     <color name="colorPrimaryDark">#1B81D3</color>
     <color name="colorAccent">#A70D32</color>
+    <color name="bg">#FAFAFA</color>
 
     <color name="workColor">#830B0B</color>
     <color name="restColor">#0E5491</color>
     <color name="prepareColor">#E6A210</color>
+    <color name="finish">#0B26D5</color>
 
-    <color name="white">#FFFFFF</color>
+    <color name="light_text">#FFFFFF</color>
+    <color name="dark_text">#353535</color>
+
+    <color name="transparent">#00FFFFFF</color>
 </resources>

@@ -1,21 +1,34 @@
-package com.ytowka.timer.Action;
+package com.ytowka.timer.action;
 
+import android.app.Activity;
+
+import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-import com.ytowka.timer.Action.ActionType.ActionType;
+import com.ytowka.timer.R;
+import com.ytowka.timer.action.ActionType.ActionType;
+import com.ytowka.timer.set.MainActivity;
 
 import java.io.Serializable;
 import java.util.concurrent.TimeUnit;
 
 public class Action implements Serializable {
 
+
+    @Expose
     @SerializedName("timeSeconds")
     private int timeSeconds;
+    @Expose
     @SerializedName("reps")
     private boolean reps;
+    @Expose
     @SerializedName("actionType")
     private ActionType actionType;
 
+    @Expose(serialize = false, deserialize = false)
     private boolean expanded = false;
+    @Expose(serialize = false, deserialize = false)
+    public static final Action finishAction = new Action(0, MainActivity.res.getString(R.string.finish),true,MainActivity.res.getColor(R.color.finish));
+
     public boolean isExpanded() {
         return expanded;
     }
@@ -35,11 +48,6 @@ public class Action implements Serializable {
         this.timeSeconds = timeSeconds;
         this.reps = timed;
         this.actionType = new ActionType(actionType.getName(),actionType.getColor());
-    }
-    public void bind(Action a){
-        timeSeconds = a.getTimeSeconds();
-        reps = a.isReps();
-        actionType.bind(a.getActionType());
     }
     public int getTimeSeconds() {
         return timeSeconds;

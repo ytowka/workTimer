@@ -1,4 +1,4 @@
-package com.ytowka.timer.Set;
+package com.ytowka.timer.set;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -12,7 +12,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.ytowka.timer.MainActivity;
 import com.ytowka.timer.R;
 
 import java.util.ArrayList;
@@ -78,6 +77,13 @@ public class SetAdapter extends RecyclerView.Adapter<SetAdapter.setViewHolder>{
             drag = itemView.findViewById(R.id.dragButton);
             drag.setOnTouchListener(this);
             main.registerForContextMenu(itemView);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    main.launchSet(set);
+                }
+            });
         }
         public void bind(final Set set){
             this.set = set;

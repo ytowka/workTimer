@@ -20,4 +20,12 @@
     <string name="emptyActionListMassage">create a new action by clicking the \"+\" button in the bottom right corner</string>
     <string name="min1char">at least 1 symbol</string>
     <string name="prepare">prepare</string>
+    <string name="exit_timer">are you sure to finish now?</string>
+    <string name="yes">yes</string>
+    <string name="no">no</string>
+    <string name="time_input">time mm:ss</string>
+    <string name="max_actions_limit">max action count limit reached</string>
+    <string name="finish">finish</string>
+    <string name="sound">sound</string>
+
 </resources>

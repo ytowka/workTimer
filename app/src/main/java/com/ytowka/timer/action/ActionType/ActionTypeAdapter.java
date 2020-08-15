@@ -1,8 +1,7 @@
-package com.ytowka.timer.Action.ActionType;
+package com.ytowka.timer.action.ActionType;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,9 +10,7 @@ import android.widget.Button;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.ytowka.timer.Action.Action;
-import com.ytowka.timer.Action.ActionAdapter;
-import com.ytowka.timer.MainActivity;
+import com.ytowka.timer.action.ActionAdapter;
 import com.ytowka.timer.R;
 
 import java.util.ArrayList;
@@ -42,13 +39,11 @@ public class ActionTypeAdapter extends RecyclerView.Adapter<ActionTypeAdapter.Ac
         readyActions.remove(index);
         notifyItemRemoved(index);
         parentAdapter.updateExpanded();
-        Log.i("debug","item removed " + readyActions.size()+"\n");
     }
     public void add(ActionType actionType){
         readyActions.add(actionType);
         notifyItemInserted(readyActions.size()-1);
         parentAdapter.updateExpanded();
-        Log.i("debug","item inserted "+ readyActions.size()+"\n");
     }
     @Override
     public void onBindViewHolder(@NonNull ActionTypeViewHolder holder, int position) {
@@ -87,6 +82,8 @@ public class ActionTypeAdapter extends RecyclerView.Adapter<ActionTypeAdapter.Ac
             this.actionType = actionType;
             index = id;
             icon.setText(actionType.getName());
+            icon.setTextColor(actionType.textColor());
+
             index = readyActions.indexOf(actionType);
 
             Drawable drawable = icon.getBackground();
@@ -101,7 +98,6 @@ public class ActionTypeAdapter extends RecyclerView.Adapter<ActionTypeAdapter.Ac
 
         @Override
         public boolean onLongClick(View v) {
-            Log.i("debug","item delete try "+ deletable()+"\n");
             if(deletable()){
                 remove(index);
             }

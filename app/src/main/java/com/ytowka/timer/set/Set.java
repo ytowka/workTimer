@@ -1,17 +1,20 @@
-package com.ytowka.timer.Set;
+package com.ytowka.timer.set;
 
+import android.util.Log;
+
+import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-import com.ytowka.timer.Action.Action;
+import com.ytowka.timer.action.Action;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 public class Set implements Serializable {
+    @Expose
     @SerializedName("actions")
     private ArrayList<Action> actions;
-    @SerializedName("launches")
-    private int launches;
+    @Expose
     @SerializedName("name")
     private String name;
 
@@ -40,12 +43,6 @@ public class Set implements Serializable {
     public ArrayList<Action> getActions() {
         return actions;
     }
-    public int getLaunches() {
-        return launches;
-    }
-    public void launch(){
-        launches++;
-    }
     public String getTime(){
         int seconds = 0;
         for(Action i: actions) seconds += i.getTimeSeconds();
@@ -62,5 +59,20 @@ public class Set implements Serializable {
             return minutesS+":"+secondsS;
         }
 
+    }
+    public int getTotalTimeSeconds(){
+        int time = 0;
+        for(Action i : actions){
+            time += i.getTimeSeconds();
+        }
+        return time;
+    }
+    public int getTotalTimeSeconds(int underIndex){
+        int time = 0;
+        for(int i = 0; i < underIndex; i++){
+            time += actions.get(i).getTimeSeconds();
+        }
+        //Log.i("debug","under index: "+underIndex+", ");
+        return time;
     }
 }

@@ -5,34 +5,40 @@
     android:theme="@style/Theme.MaterialComponents.Light.NoActionBar"
     android:layout_width="wrap_content"
     android:minWidth="300dp"
+    android:background="@drawable/dialog_background"
     android:layout_height="wrap_content">
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textField"
-        android:layout_margin="16dp"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="11dp"
+        android:layout_marginBottom="16dp"
+        android:hint="@string/name_the_set"
+        app:boxCornerRadiusBottomEnd="25dp"
+        app:boxCornerRadiusBottomStart="25dp"
+        app:boxCornerRadiusTopEnd="25dp"
+        app:boxCornerRadiusTopStart="25dp"
         app:boxStrokeColor="@color/colorPrimary"
-        app:helperTextEnabled="true"
-        app:helperText="@string/symbols"
+        app:hintTextColor="@color/colorPrimary"
+
         app:counterEnabled="true"
         app:counterMaxLength="30"
         app:errorEnabled="true"
-        android:hint="@string/name_the_set"
-        app:hintTextColor="@color/colorPrimary"
-
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        app:helperText="@string/symbols"
+        app:helperTextEnabled="true">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/edit_set_name"
-            android:maxLines="1"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textCursorDrawable="@null"
+            android:layout_height="50dp"
+            android:maxLength="30"
+            android:maxLines="1"
             android:textColorHighlight="@color/colorPrimary"
             android:textColorLink="@color/colorAccent"
-            android:maxLength="30"
-            />
+            android:textCursorDrawable="@null" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -45,6 +51,6 @@
         android:background="@drawable/rounded_rectangle"
         android:backgroundTint="@color/colorPrimary"
         android:text="@string/apply"
-        android:textColor="@color/white" />
+        android:textColor="@color/light_text" />
 
 </LinearLayout>

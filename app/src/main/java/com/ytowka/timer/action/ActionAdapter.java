@@ -1,4 +1,4 @@
-package com.ytowka.timer.Action;
+package com.ytowka.timer.action;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -21,9 +20,10 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.ytowka.timer.Action.ActionType.ActionType;
-import com.ytowka.timer.Action.ActionType.ActionTypeAdapter;
-import com.ytowka.timer.MainActivity;
+import com.google.android.material.textfield.TextInputEditText;
+import com.ytowka.timer.action.ActionType.ActionType;
+import com.ytowka.timer.action.ActionType.ActionTypeAdapter;
+import com.ytowka.timer.set.MainActivity;
 import com.ytowka.timer.R;
 
 import java.util.ArrayList;
@@ -31,8 +31,10 @@ import java.util.ArrayList;
 import yuku.ambilwarna.AmbilWarnaDialog;
 
 public class ActionAdapter extends RecyclerView.Adapter<ActionAdapter.ActionViewHolder>{
+    public static final int MAX_ACTIONS = 360;
+
     ArrayList<Action> actions;
-    EditSetActivity main;
+    public EditSetActivity main;
     private ArrayList<ActionViewHolder> viewHolders;
     private ArrayList<RecyclerView> actionTypesLists;
     private ArrayList<ActionTypeAdapter> actionTypeAdapters;
@@ -123,10 +125,14 @@ public class ActionAdapter extends RecyclerView.Adapter<ActionAdapter.ActionView
         emptyMassage.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
         return count;
     }
-    public void add(Action action){
-        actions.add(action);
-        notifyItemInserted(actions.size());
-        updateIndexes();
+    public boolean add(Action action){
+        if(actions.size() < MAX_ACTIONS){
+            actions.add(action);
+            notifyItemInserted(actions.size());
+            updateIndexes();
+            return true;
+        }
+        return false;
     }
     public void remove(int indedx){
         actions.remove(indedx);
@@ -172,8 +178,10 @@ public class ActionAdapter extends RecyclerView.Adapter<ActionAdapter.ActionView
 
         private boolean deletable = true;
 
-        private EditText editLabel;
-        private EditText editTime;
+        View v;
+
+        private TextInputEditText editLabel;
+        private TextInputEditText editTime;
         private Button iconPick;
         private CheckBox reps;
 
@@ -190,6 +198,8 @@ public class ActionAdapter extends RecyclerView.Adapter<ActionAdapter.ActionView
             icon = itemView.findViewById(R.id.icon);
             index = itemView.findViewById(R.id.action_index);
             repsIcon = itemView.findViewById(R.id.reps_icon);
+
+            v = itemView;
 
             //itemView.findViewById()
             editLabel = itemView.findViewById(R.id.editActionName);editLabel.addTextChangedListener(new TextWatcher() {
@@ -251,6 +261,7 @@ public class ActionAdapter extends RecyclerView.Adapter<ActionAdapter.ActionView
                 case R.id.add_actionType_btn:
                     bindAction();
                     adapter.add(new ActionType(action.getName(),action.getColor()));
+                    main.saveAT();
                     break;
                 case R.id.pickColorBtn:
                     AmbilWarnaDialog dialog = new AmbilWarnaDialog(main, action.getColor(), false, new AmbilWarnaDialog.OnAmbilWarnaListener() {
@@ -291,6 +302,7 @@ public class ActionAdapter extends RecyclerView.Adapter<ActionAdapter.ActionView
                 }else{
                     timeSeconds = 5;
                 }
+                if(timeSeconds > 5999) timeSeconds = 5999;
                 return timeSeconds;
             }
             return 5;
@@ -326,7 +338,6 @@ public class ActionAdapter extends RecyclerView.Adapter<ActionAdapter.ActionView
                 Drawable drawable = main.getDrawable(R.drawable.oval);
                 drawable.setTint(action.getColor());
                 iconPick.setBackground(drawable);
-
             }else {
                 deletable = true;
                 label.setText(action.getName());
@@ -363,19 +374,6 @@ public class ActionAdapter extends RecyclerView.Adapter<ActionAdapter.ActionView
         public void updateRV(){
             adapter.notifyDataSetChanged();
         }
-
-
-        /*@Override
-        public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-            switch(actionId){
-                case 0:
-                    action.getActionType().setName(v.getText().toString());
-                    break;
-                case 1:
-                    action.setTimeSeconds(getTimeSeconds(v.getText().toString()));
-            }
-            return false;
-        }*/
     }
     private ItemTouchHelper.Callback callback = new ItemTouchHelper.Callback() {
         @Override

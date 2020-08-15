@@ -1,11 +1,10 @@
-package com.ytowka.timer.Action;
+package com.ytowka.timer.action;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -13,7 +12,7 @@ import androidx.fragment.app.DialogFragment;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.ytowka.timer.R;
-import com.ytowka.timer.Set.Set;
+import com.ytowka.timer.set.Set;
 
 public class NamingDialog extends DialogFragment implements View.OnClickListener {
     private TextInputEditText nameET;

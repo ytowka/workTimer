@@ -21,4 +21,11 @@
     <string name="emptyActionListMassage">создайте новое действие, нажав на кнопку \"+\" в правом нижнем углу</string>
     <string name="min1char">хотя бы один символ</string>
     <string name="prepare">подготовка</string>
+    <string name="exit_timer">вы уверены что хотите завершить сейчас?</string>
+    <string name="yes">да</string>
+    <string name="no">нет</string>
+    <string name="time_input">время мм:cc</string>
+    <string name="max_actions_limit">достигнуто максимальное количество действий</string>
+    <string name="finish">финиш</string>
+    <string name="sound">звук</string>
 </resources>

@@ -9,9 +9,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Timer.TimerActivity"></activity>
-        <activity android:name=".Action.EditSetActivity" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".timer.TimerActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".action.EditSetActivity" />
+        <activity android:name=".set.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

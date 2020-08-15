@@ -1,4 +1,4 @@
-package com.ytowka.timer;
+package com.ytowka.timer.set;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -11,7 +11,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Bundle;
-import android.preference.Preference;
 import android.view.ContextMenu;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,10 +20,10 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import com.ytowka.timer.Action.ActionType.ActionType;
-import com.ytowka.timer.Set.Set;
-import com.ytowka.timer.Action.EditSetActivity;
-import com.ytowka.timer.Set.SetAdapter;
+import com.ytowka.timer.action.ActionType.ActionType;
+import com.ytowka.timer.R;
+import com.ytowka.timer.action.EditSetActivity;
+import com.ytowka.timer.timer.TimerActivity;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -41,6 +40,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public static SetAdapter adapter;
 
     public static final String SETID = "com.ytowka.timer.SETID";
+    public static final String JSON_SET_INTENT_KEY = "com.ytowka.timer.SET";
     public static final int EDIT_SET = 0;
     public static final int ADD_SET = 1;
 
@@ -52,22 +52,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private boolean isSetsLoaded;
     private boolean isActionTypesLoaded;
 
-    private Gson gson;
+    public static Gson gson;
 
     private SharedPreferences preferences;
 
     @Override
     protected void onDestroy() {
-       save();
         super.onDestroy();
     }
-    public void save(){
+    public void saveSets(){
         SharedPreferences.Editor editor = preferences.edit();
         editor.putString(SET_PREFS,gson.toJson(adapter.getSets()));
-        editor.putString(ACTION_TYPES_PREFS,gson.toJson(readyActions));
-        editor.commit();
+        editor.apply();
     }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,6 +73,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setSupportActionBar(toolbar);
         addFab = findViewById(R.id.fab);
         addFab.setOnClickListener(this);
+        res = getResources();
 
         setList = findViewById(R.id.setList);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
@@ -96,7 +94,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setList.setAdapter(adapter);
 
         itemsListType = new TypeToken<List<ActionType>>() {}.getType();
-        res = getResources();
         if(preferences.contains(ACTION_TYPES_PREFS)){
             readyActions = gson.fromJson(preferences.getString(ACTION_TYPES_PREFS,""),itemsListType);
         }else{
@@ -107,7 +104,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
     public void launchSet(Set launchedSet){
-        launchedSet.launch();
+        Intent intent = new Intent(this, TimerActivity.class);
+        intent.putExtra(JSON_SET_INTENT_KEY,gson.toJson(launchedSet));
+        adapter.swapItems(adapter.getSets().indexOf(launchedSet),0);
+        startActivity(intent);
     }
     @Override
     public void onClick(View v) {
@@ -129,7 +129,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }else{
                     adapter.notifyDataSetChanged();
                 }
-                save();
+                saveSets();
                 break;
             case ADD_SET:
                 if(resultCode == RESULT_CANCELED){
@@ -137,7 +137,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }else{
                     adapter.notifyDataSetChanged();
                 }
-                save();
+                saveSets();
                 break;
         }
     }
@@ -147,6 +147,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (item.getItemId()){
             case R.id.delete_item:
                 adapter.remove(adapter.contextCallItem);
+                saveSets();
                 break;
             case R.id.edit_item:
                 editSet(adapter.contextCallItem,EDIT_SET);
@@ -165,7 +166,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreateContextMenu(menu, v, menuInfo);
         getMenuInflater().inflate(R.menu.set_menu,menu);
     }
-
     public SetAdapter getAdapter() {
         return adapter;
     }
